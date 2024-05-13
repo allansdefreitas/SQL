@@ -1,0 +1,92 @@
+
+
+CREATE PROCEDURE insert_segmercado
+(p_ID IN NUMBER, p_DESCRICAO IN VARCHAR2)
+IS
+--put other vars here
+BEGIN
+    INSERT INTO SEGMERCADO (ID, DESCRICAO) VALUES (p_ID, UPPER(p_DESCRICAO));
+    COMMIT;
+END;
+
+
+SELECT * FROM SEGMERCADO ORDER BY ID ASC;
+
+EXECUTE insert_segmercado(4, 'Farmaceuticos');
+
+--other way to execute a procedure
+BEGIN
+insert_segmercado(5, 'Mineração');
+END;
+
+-- More procedures
+
+CREATE OR REPLACE PROCEDURE INCLUINDO_PRODUTO 
+(p_COD produto_exercicio.cod%type
+, p_DESCRICAO produto_exercicio.descricao%type
+, p_CATEGORIA produto_exercicio.categoria%type)
+IS
+BEGIN
+   INSERT INTO PRODUTO_EXERCICIO (COD, DESCRICAO, CATEGORIA) VALUES (p_COD, p_DESCRICAO, p_CATEGORIA);
+   COMMIT;
+END;
+
+CREATE OR REPLACE PROCEDURE ALTERANDO_CATEGORIA_PRODUTO 
+(p_COD produto_exercicio.cod%type
+, p_CATEGORIA produto_exercicio.categoria%type)
+IS
+BEGIN
+   UPDATE PRODUTO_EXERCICIO SET CATEGORIA = p_CATEGORIA WHERE COD = P_COD;
+   COMMIT;
+END;
+
+CREATE OR REPLACE PROCEDURE EXCLUINDO_PRODUTO 
+(p_COD produto_exercicio.cod%type)
+IS
+BEGIN
+   DELETE FROM PRODUTO_EXERCICIO WHERE COD = P_COD;
+   COMMIT;
+END;
+
+
+SELECT * FROM PRODUTO_EXERCICIO;
+
+DESC PRODUTO_EXERCICIO;
+
+EXECUTE excluindo_produto(41235);
+EXECUTE ALTERANDO_CATEGORIA_PRODUTO('41232', 'Sucos artificiais');
+EXECUTE ALTERANDO_CATEGORIA_PRODUTO(41232, 'Sucos artificiais de fruta');
+
+--- ALTER A PROCEDURE ===================================================================
+
+CREATE OR REPLACE PROCEDURE insert_segmercado
+(p_ID IN SEGMERCADO.ID%type, p_DESCRICAO IN SEGMERCADO.DESCRICAO%type)
+IS
+BEGIN
+    INSERT INTO SEGMERCADO (ID, DESCRICAO) VALUES (p_ID, UPPER(p_DESCRICAO));
+    COMMIT;
+END;
+
+EXECUTE insert_segmercado(6, 'Tecnologia');
+
+SELECT * FROM SEGMERCADO ORDER BY ID ASC;
+
+
+--- DELETE PROCEDURE ===================================================================
+CREATE OR REPLACE PROCEDURE insert_segmercado2
+(p_ID IN SEGMERCADO.ID%type, p_DESCRICAO IN SEGMERCADO.DESCRICAO%type)
+IS
+BEGIN
+    INSERT INTO SEGMERCADO (ID, DESCRICAO) VALUES (p_ID, UPPER(p_DESCRICAO));
+    COMMIT;
+END;
+
+CREATE OR REPLACE PROCEDURE insert_segmercado3
+(p_ID IN SEGMERCADO.ID%type, p_DESCRICAO IN SEGMERCADO.DESCRICAO%type)
+IS
+BEGIN
+    INSERT INTO SEGMERCADO (ID, DESCRICAO) VALUES (p_ID, UPPER(p_DESCRICAO));
+    COMMIT;
+END;
+
+DROP PROCEDURE insert_segmercado3;
