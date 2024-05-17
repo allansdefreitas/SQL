@@ -1,0 +1,68 @@
+SELECT * FROM CLIENTE order by id;
+
+EXECUTE incluir_cliente(null, 'LOJA FREITAS', '54234897897', 1, 250000);
+
+SET SERVEROUTPUT ON;
+
+--- ERRORS AND EXCEPTION LIST:
+-- https://docs.oracle.com/database/timesten-18.1/TTPLS/exceptions.htm
+create or replace PROCEDURE incluir_cliente 
+(
+  p_ID CLIENTE.ID%type,
+  p_RAZAO CLIENTE.RAZAO_SOCIAL%type,
+  p_CNPJ CLIENTE.CNPJ%type,
+  p_SEGMERCADO CLIENTE.SEGMERCADO_ID%type,
+  p_FATURAMENTO CLIENTE.FATURAMENTO_PREVISTO%type
+)
+IS
+  v_CATEGORIA CLIENTE.CATEGORIA%type;
+  v_CNPJ CLIENTE.CNPJ%type;
+  e_IDNULO exception;
+  pragma exception_init(e_IDNULO,-1400); -- for ORA-01400
+BEGIN
+    v_CATEGORIA := categoria_cliente(p_FATURAMENTO);
+    FORMATA_CNPJ(p_CNPJ, v_CNPJ);
+
+  INSERT INTO CLIENTE
+  VALUES (p_ID, p_RAZAO, v_CNPJ, p_SEGMERCADO, SYSDATE, p_FATURAMENTO, v_CATEGORIA);
+  COMMIT;
+  
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        RAISE_APPLICATION_ERROR(-20010, 'Cliente especificado já existe!');
+    WHEN e_IDNULO THEN
+        RAISE_APPLICATION_ERROR(-20015, 'ID do cliente é nulo!');
+END;
+
+
+
+
+
+
+---EXERCÍCIO
+
+DECLARE
+   v_PRODUTO produto_exercicio.cod%type:= 41232;
+BEGIN
+   EXCLUINDO_PRODUTO(v_PRODUTO);
+END;
+
+SELECT * FROM PRODUTO_EXERCICIO;
+
+
+create or replace PROCEDURE EXCLUINDO_PRODUTO  
+(p_COD produto_exercicio.cod%type)
+IS
+    e_DEPENDENCY_FK exception;
+    pragma exception_init(e_DEPENDENCY_FK, -2292); -- THAT IS AN EXISTENT ORACLE ERROR: ORA-02292 integrity constraint
+BEGIN
+   DELETE FROM PRODUTO_EXERCICIO WHERE COD = P_COD;
+   COMMIT;
+   
+EXCEPTION 
+    WHEN e_DEPENDENCY_FK THEN
+        --RAISE_APPLICATION_ERROR(-20020, 'O REGISTRO POSSUI UMA DEPENDÊNCIA EM PELO MENOS UMA TABELA E, PORTANTO, NÃO PODE SER EXCLUÍDO!');
+        raise_application_error(-20020,'PRODUTO ' || p_COD || ' POSSUI VENDA. LOGO NÃO PODE SER EXCLUIDO.'); -- ERRO ESPECIFICADO NO DOMÍNIO DE NEGÓCIO
+END;
+
+
