@@ -1,0 +1,40 @@
+INSERT INTO CLIENTE (ID, RAZAO_SOCIAL, CNPJ, SEGMERCADO_ID, DATA_INCLUSAO, FATURAMENTO_PREVISTO, CATEGORIA) 
+VALUES (5, 'Padaria Sara Bella', '17/222', 1, TO_DATE('20/12/2024', 'DD/MM/YYYY'), 500000, 'PEQUENO');
+
+
+INSERT INTO USER_DEV.CLIENTE (ID, RAZAO_SOCIAL, CNPJ, SEGMERCADO_ID, DATA_INCLUSAO, FATURAMENTO_PREVISTO, CATEGORIA) 
+VALUES (5, 'Padaria Sara Bella', '17/222', 1, TO_DATE('20/12/2024', 'DD/MM/YYYY'), 500000, 'PEQUENO');
+
+EXECUTE USER_DEV.INCLUIR_CLIENTE(5, 'Padaria Sara Bella', '22222', 1, 500000);
+
+SELECT * FROM USER_DEV.CLIENTE;
+
+
+
+
+SELECT * FROM USER_DEV.produto_exercicio;
+SELECT * FROM USER_DEV.produto_venda_exercicio;
+
+-- Sinônimos (Synonyms): Testando sinônimos criados por user_dev
+SELECT * FROM CLIENTE;
+
+
+-- C
+
+CREATE OR REPLACE PROCEDURE APP_INCLUIR_CLIENTE
+(p_ID IN cliente.id%type,
+p_RAZAO IN cliente.razao_social%type,
+p_CNPJ IN cliente.cnpj%type,
+p_SEGMERCADO IN cliente.segmercado_id%type,
+p_FATURAMENTO IN cliente.faturamento_previsto%type)
+IS
+BEGIN
+    INCLUIR_CLIENTE(p_ID, p_RAZAO, p_CNPJ, p_SEGMERCADO, p_FATURAMENTO);
+END;
+
+
+// comando SQL omitido
+
+EXECUTE APP_INCLUIR_CLIENTE (6, 'SEGUNDO CLIENTE INCLUIDO POR USER_APP', '23456', 2, 100000);
+
+select * from cliente;
