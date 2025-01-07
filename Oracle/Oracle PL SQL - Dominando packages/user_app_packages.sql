@@ -1,0 +1,13 @@
+EXECUTE user_dev.CLIENTE_PAC.INCLUIR_CLIENTE(11, 'Antônio Gilberto', 455556, 2, 100000);
+
+
+SELECT * FROM CLIENTE;
+
+
+EXECUTE CLIENTE_PAC.INCLUIR_CLIENTE(12, 'Claudionor de Andrade', 455556, 2, 100000);
+
+
+
+EXECUTE CLIENTE_PAC.excluir_cliente(12);
+
+
